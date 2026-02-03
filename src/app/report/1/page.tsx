@@ -98,6 +98,46 @@ export default function ReportPage() {
     }
   };
 
+  const handleShareAudio = async () => {
+    if (!call.audioUrl) {
+      toast({
+        variant: "destructive",
+        title: "Audio Not Found",
+        description: "There is no audio recording to share.",
+      });
+      return;
+    }
+
+    const audioUrl = new URL(call.audioUrl, window.location.origin).href;
+
+    try {
+      const response = await fetch(audioUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "call_recording.mp3", { type: blob.type });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: `Call recording from ${call.caller}`,
+          text: `Listen to the call recording from a suspected scam call.`,
+          files: [file],
+        });
+      } else {
+        navigator.clipboard.writeText(audioUrl);
+        toast({
+          title: "Audio Link Copied",
+          description: "A shareable link to the audio has been copied to your clipboard.",
+        });
+      }
+    } catch (err) {
+      console.error("Could not share audio:", err);
+      navigator.clipboard.writeText(audioUrl);
+      toast({
+        title: "Audio Link Copied",
+        description: "File sharing is not supported, so a link was copied to your clipboard instead.",
+      });
+    }
+  };
+
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
@@ -139,9 +179,15 @@ export default function ReportPage() {
 
             {call.audioUrl && (
               <Card>
-                <CardHeader className="flex flex-row items-center gap-3 space-y-0">
-                  <Music className="w-5 h-5 text-primary"/>
-                  <CardTitle className="text-xl">Call Recording</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                  <div className="flex items-center gap-3">
+                    <Music className="w-5 h-5 text-primary"/>
+                    <CardTitle className="text-xl">Call Recording</CardTitle>
+                  </div>
+                  <Button variant="outline" size="icon" onClick={handleShareAudio}>
+                    <Share2 className="h-4 w-4" />
+                    <span className="sr-only">Share Recording</span>
+                  </Button>
                 </CardHeader>
                 <CardContent className="pt-4">
                     <div className="flex items-center gap-3">
