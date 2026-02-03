@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Phone, PhoneOff, Mic, User, Bot, AlertTriangle, FileText, ChevronUp, Link2, Landmark, Wallet, CircleDashed } from 'lucide-react';
+import { Phone, PhoneOff, Mic, User, Bot, AlertTriangle, FileText, ChevronUp, Link2, Landmark, Wallet, CircleDashed, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -14,6 +14,7 @@ import { callHistory } from '@/lib/data';
 import { extractScamIntelligence, ExtractScamIntelligenceOutput } from '@/ai/flows/scam-intelligence-panel';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { Label } from '@/components/ui/label';
 
 type CallState = 'incoming' | 'live' | 'summary';
 type TranscriptItem = { speaker: 'AI' | 'Scammer' | 'User'; text: string };
