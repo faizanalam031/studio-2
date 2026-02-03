@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Share2, ShieldCheck, AlertTriangle, BadgeCheck, Bot, User, Wallet, Landmark, Link2, Play, Pause, Music } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,6 +22,13 @@ export default function ReportPage() {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const { toast } = useToast();
+  const [formattedTimestamp, setFormattedTimestamp] = useState('');
+
+  useEffect(() => {
+    if (call) {
+      setFormattedTimestamp(new Date(call.timestamp).toLocaleString());
+    }
+  }, [call]);
 
   if (!call) {
     notFound();
@@ -168,7 +175,7 @@ export default function ReportPage() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Date & Time</p>
-                  <p className="font-semibold">{new Date(call.timestamp).toLocaleString()}</p>
+                  <p className="font-semibold">{formattedTimestamp}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Duration</p>
