@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AppLayout from "@/components/app-layout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User, Shield } from "lucide-react";
+import { User, Shield, Moon, Sun } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +18,30 @@ type Personality = "polite" | "confused" | "assertive";
 export default function SettingsPage() {
   const userAvatar = PlaceHolderImages.find(p => p.id === 'user-profile-avatar');
   const [personality, setPersonality] = useState<Personality>('polite');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+    }
+  }, []);
+
+  const toggleTheme = (checked: boolean) => {
+    setIsDarkMode(checked);
+    if (checked) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   return (
     <AppLayout>
@@ -28,7 +52,7 @@ export default function SettingsPage() {
         </header>
 
         <div className="flex-1 p-4 md:p-6 space-y-8 overflow-y-auto">
-          {/* USER PROFILE CARD - Kept as requested */}
+          {/* USER PROFILE CARD */}
           <Card>
             <CardHeader>
               <CardTitle>User Profile</CardTitle>
@@ -68,6 +92,22 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* APPEARANCE SECTION */}
+          <div>
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Appearance</h2>
+            <Card>
+              <CardContent className="p-0">
+                <div className="flex items-center justify-between p-4">
+                  <div className="flex items-center gap-2">
+                      {isDarkMode ? <Moon className="h-5 w-5 text-muted-foreground" /> : <Sun className="h-5 w-5 text-muted-foreground" />}
+                      <Label htmlFor="dark-mode" className="text-base font-medium">Dark Mode</Label>
+                  </div>
+                  <Switch id="dark-mode" checked={isDarkMode} onCheckedChange={toggleTheme} />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           {/* BEHAVIOR SECTION */}
           <div>
