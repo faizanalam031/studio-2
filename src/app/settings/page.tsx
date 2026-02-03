@@ -1,17 +1,23 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import AppLayout from "@/components/app-layout";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User } from "lucide-react";
+import { User, Shield } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+
+type Personality = "polite" | "confused" | "assertive";
 
 export default function SettingsPage() {
   const userAvatar = PlaceHolderImages.find(p => p.id === 'user-profile-avatar');
+  const [personality, setPersonality] = useState<Personality>('polite');
 
   return (
     <AppLayout>
@@ -22,6 +28,7 @@ export default function SettingsPage() {
         </header>
 
         <div className="flex-1 p-4 md:p-6 space-y-8 overflow-y-auto">
+          {/* USER PROFILE CARD - Kept as requested */}
           <Card>
             <CardHeader>
               <CardTitle>User Profile</CardTitle>
@@ -46,7 +53,7 @@ export default function SettingsPage() {
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input id="phone" defaultValue="+91 98765 43210" disabled />
               </div>
-              <div className="space-y-2">
+               <div className="space-y-2">
                 <Label htmlFor="language">Language</Label>
                 <Select defaultValue="en">
                   <SelectTrigger id="language">
@@ -62,60 +69,67 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Protection Sensitivity</CardTitle>
-              <CardDescription>How proactively should the AI intervene?</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="sensitivity">Sensitivity Level</Label>
-                <Select defaultValue="balanced">
-                  <SelectTrigger id="sensitivity">
-                    <SelectValue placeholder="Select level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="relaxed">Relaxed</SelectItem>
-                    <SelectItem value="balanced">Balanced</SelectItem>
-                    <SelectItem value="strict">Strict</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label htmlFor="auto-answer" className="text-base">Auto AI Answer</Label>
-                  <p className="text-sm text-muted-foreground">Automatically let AI handle calls marked as high-risk scams.</p>
+          {/* BEHAVIOR SECTION */}
+          <div>
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Behavior</h2>
+            <Card>
+              <CardContent className="divide-y divide-border p-0">
+                <div className="flex items-center justify-between p-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="auto-answer" className="text-base font-medium">Auto AI Answer</Label>
+                    <p className="text-sm text-muted-foreground">Let AI answer confirmed scam calls automatically.</p>
+                  </div>
+                  <Switch id="auto-answer" defaultChecked={true} />
                 </div>
-                <Switch id="auto-answer" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Guardian Behavior</CardTitle>
-              <CardDescription>Choose the AI's personality when handling calls.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="behavior">AI Personality</Label>
-                <Select defaultValue="polite">
-                  <SelectTrigger id="behavior">
-                    <SelectValue placeholder="Select personality" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="polite">Polite</SelectItem>
-                    <SelectItem value="confused">Confused</SelectItem>
-                    <SelectItem value="assertive">Assertive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-end">
-            <Button>Save Changes</Button>
+                <div className="flex items-center justify-between p-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="silent-monitoring" className="text-base font-medium">Silent Monitoring</Label>
+                    <p className="text-sm text-muted-foreground">Listen to AI takeover without interrupting.</p>
+                  </div>
+                  <Switch id="silent-monitoring" defaultChecked={true} />
+                </div>
+                <div className="flex items-center justify-between p-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="gov-reporting" className="text-base font-medium">Government Reporting</Label>
+                    <p className="text-sm text-muted-foreground">Automatically share scam data with Cybercrime portal.</p>
+                  </div>
+                  <Switch id="gov-reporting" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
+
+          {/* PERSONALITY SECTION */}
+          <div>
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Personality</h2>
+            <div className="bg-muted p-1 rounded-full flex items-center">
+              {(['polite', 'confused', 'assertive'] as Personality[]).map((p) => (
+                <Button
+                  key={p}
+                  onClick={() => setPersonality(p)}
+                  variant={personality === p ? 'default' : 'ghost'}
+                  className={cn(
+                    "w-full rounded-full transition-colors capitalize",
+                    personality === p ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
+                  )}
+                >
+                  {p}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
+          {/* STRICT PROTECTION CARD */}
+          <Card className="bg-primary/10 border-primary/20">
+            <CardContent className="p-4 flex items-start gap-4">
+              <Shield className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-primary">Strict Protection</h3>
+                <p className="text-sm text-primary/80">In this mode, any caller not in your contacts will be screened by the AI first.</p>
+              </div>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
     </AppLayout>
