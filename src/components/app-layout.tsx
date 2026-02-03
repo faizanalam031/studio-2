@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, History, Settings, User } from "lucide-react";
+import {
+  Shield,
+  History,
+  Settings,
+  User,
+  Bell,
+  BrainCircuit,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import AiGuardianLogo from "./ai-guardian-logo";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -18,52 +25,37 @@ import {
 import { Button } from "./ui/button";
 
 const navItems = [
-  { href: "/dashboard", icon: Shield, label: "Guardian Hub" },
-  { href: "/history", icon: History, label: "Call History" },
-  { href: "/settings", icon: Settings, label: "Controls" },
+  { href: "/dashboard", icon: Shield, label: "Hub" },
+  { href: "/history", icon: History, label: "History" },
+  { href: "/memory", icon: BrainCircuit, label: "Memory" },
+  { href: "/settings", icon: Settings, label: "Setup" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const userAvatar = PlaceHolderImages.find(p => p.id === 'user-profile-avatar');
+  const userAvatar = PlaceHolderImages.find(
+    (p) => p.id === "user-profile-avatar"
+  );
 
   return (
-    <div className="min-h-screen bg-background text-foreground md:flex">
-      {/* Sidebar for Desktop */}
-      <aside className="hidden w-64 flex-col border-r bg-card p-4 md:flex">
-        <div className="mb-8">
-          <AiGuardianLogo />
-        </div>
-        <nav className="flex flex-col gap-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-foreground/80 transition-colors hover:bg-primary/10 hover:text-primary",
-                pathname.startsWith(item.href) && "bg-primary/10 font-medium text-primary"
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="font-medium">{item.label}</span>
-            </Link>
-          ))}
-        </nav>
-        <div className="mt-auto">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm md:hidden">
+        <AiGuardianLogo />
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-5 w-5" />
+            <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-destructive" />
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-auto w-full justify-start p-2 text-left">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9">
-                    {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt="User avatar" />}
-                    <AvatarFallback><User /></AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-semibold">User</p>
-                    <p className="text-xs text-muted-foreground">+91 98765 43210</p>
-                  </div>
-                </div>
-              </Button>
+              <Avatar className="h-9 w-9 cursor-pointer">
+                {userAvatar && (
+                  <AvatarImage src={userAvatar.imageUrl} alt="User avatar" />
+                )}
+                <AvatarFallback>
+                  <User />
+                </AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -71,7 +63,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Billing</DropdownMenuItem>
               <DropdownMenuSeparator />
-               <Link href="/">
+              <Link href="/">
                 <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                   Log out
                 </DropdownMenuItem>
@@ -79,27 +71,108 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </aside>
+      </header>
 
-      {/* Main Content */}
-      <main className="flex-1 pb-20 md:pb-0">{children}</main>
+      <div className="md:grid md:grid-cols-[240px_1fr]">
+        <aside className="hidden md:block border-r p-4">
+          <div className="flex items-center justify-between mb-8">
+            <AiGuardianLogo />
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-destructive" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>No new notifications</DropdownMenuItem>
+            </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <nav className="flex flex-col gap-2 sticky top-6">
+            {navItems.map((item) => {
+              const isActive =
+                item.href === "/dashboard"
+                  ? pathname === item.href
+                  : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-foreground/70 transition-colors hover:bg-muted hover:text-foreground",
+                    isActive && "bg-muted font-semibold text-foreground"
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+            <div className="absolute bottom-4">
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-3 cursor-pointer">
+                    <Avatar className="h-9 w-9">
+                        {userAvatar && (
+                        <AvatarImage src={userAvatar.imageUrl} alt="User avatar" />
+                        )}
+                        <AvatarFallback>
+                        <User />
+                        </AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <p className="font-semibold">User</p>
+                        <p className="text-xs text-muted-foreground">+91 98765 43210</p>
+                    </div>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Billing</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <Link href="/">
+                <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+                  Log out
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          </DropdownMenu>
+            </div>
+        </aside>
 
-      {/* Bottom Nav for Mobile */}
+        <main className="pb-20 md:pb-0">{children}</main>
+      </div>
+
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card md:hidden">
-        <div className="grid h-16 grid-cols-3">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex flex-col items-center justify-center gap-1 text-xs text-foreground/70 transition-colors",
-                pathname.startsWith(item.href) && "text-primary"
-              )}
-            >
-              <item.icon className="h-6 w-6" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+        <div className="grid h-16 grid-cols-4">
+          {navItems.map((item) => {
+            const isActive =
+              item.href === "/dashboard"
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 pt-1 text-xs text-foreground/60 transition-colors",
+                  isActive && "text-primary"
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="font-medium">{item.label}</span>
+                {isActive && (
+                  <span className="mt-0.5 block h-1 w-1 rounded-full bg-primary"></span>
+                )}
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </div>

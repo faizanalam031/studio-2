@@ -32,7 +32,7 @@ export default function ReportPage() {
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
-        <header className="p-4 md:p-6 border-b flex justify-between items-center">
+        <header className="p-4 md:p-6 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-2xl md:text-3xl font-bold">Evidence Report</h1>
             <p className="text-muted-foreground">Call from: {call.caller}</p>

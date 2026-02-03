@@ -16,7 +16,7 @@ export default function SettingsPage() {
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
-        <header className="p-4 md:p-6 border-b">
+        <header className="p-4 md:p-6">
           <h1 className="font-headline text-2xl md:text-3xl font-bold">Guardian Controls</h1>
           <p className="text-muted-foreground">Fine-tune how your AI Guardian protects you.</p>
         </header>

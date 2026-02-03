@@ -25,35 +25,39 @@ export default function HistoryPage() {
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
-        <header className="p-4 md:p-6 border-b">
+        <header className="p-4 md:p-6">
           <h1 className="font-headline text-2xl md:text-3xl font-bold">Call & Scam Log</h1>
           <p className="text-muted-foreground">A complete record of all analyzed calls.</p>
         </header>
-        <ScrollArea className="flex-1">
-          <div className="p-4 md:p-6 space-y-2">
-            {callHistory.map((call, index) => (
-              <div key={call.id}>
-                <Link href={`/report/${call.id}`} className="block rounded-lg hover:bg-muted transition-colors">
-                  <div className="flex items-center gap-4 p-3">
-                    <div className="flex-shrink-0">
-                      {getIconForType(call.type)}
-                    </div>
-                    <div className="flex-grow">
-                      <p className="font-medium">{call.caller}</p>
-                      <p className="text-sm text-muted-foreground">{new Date(call.timestamp).toLocaleString()}</p>
-                    </div>
-                    <div className="text-right">
-                       <Badge variant={call.type === 'Scam' ? 'destructive' : call.type === 'AI-Handled' ? 'default' : 'secondary'} className={call.type === 'AI-Handled' ? 'bg-accent text-accent-foreground' : ''}>
-                        {call.type}
-                      </Badge>
-                      <p className="text-xs text-muted-foreground mt-1">{call.duration}</p>
-                    </div>
+        <ScrollArea className="flex-1 px-4 md:px-6">
+          <Card className="rounded-2xl">
+            <CardContent className="p-0">
+              <div className="space-y-2">
+                {callHistory.map((call, index) => (
+                  <div key={call.id}>
+                    <Link href={`/report/${call.id}`} className="block rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center gap-4 p-3">
+                        <div className="flex-shrink-0 p-2 bg-muted/50 rounded-lg">
+                          {getIconForType(call.type)}
+                        </div>
+                        <div className="flex-grow">
+                          <p className="font-medium">{call.caller}</p>
+                          <p className="text-sm text-muted-foreground">{new Date(call.timestamp).toLocaleString()}</p>
+                        </div>
+                        <div className="text-right">
+                          <Badge variant={call.type === 'Scam' ? 'destructive' : call.type === 'AI-Handled' ? 'default' : 'secondary'} className={call.type === 'AI-Handled' ? 'bg-accent text-accent-foreground' : ''}>
+                            {call.type}
+                          </Badge>
+                          <p className="text-xs text-muted-foreground mt-1">{call.duration}</p>
+                        </div>
+                      </div>
+                    </Link>
+                    {index < callHistory.length - 1 && <Separator />}
                   </div>
-                </Link>
-                {index < callHistory.length - 1 && <Separator />}
+                ))}
               </div>
-            ))}
-          </div>
+            </CardContent>
+          </Card>
         </ScrollArea>
       </div>
     </AppLayout>
