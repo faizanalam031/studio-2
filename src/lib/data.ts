@@ -10,7 +10,8 @@ export type Call = {
     bankAccounts: string[];
     suspiciousLinks: string[];
     riskFactors: string[];
-  }
+  };
+  audioUrl?: string;
 };
 
 export const callHistory: Call[] = [
@@ -20,6 +21,7 @@ export const callHistory: Call[] = [
     type: 'AI-Handled',
     timestamp: '2024-07-29T10:30:00Z',
     duration: '2m 45s',
+    audioUrl: '/audio/placeholder.mp3',
     transcript: [
         { speaker: 'Scammer', text: 'Hello sir, I am calling from the bank rewards department. You have won a new car.' },
         { speaker: 'AI', text: 'That sounds exciting. A new car? Which bank are you calling from?' },

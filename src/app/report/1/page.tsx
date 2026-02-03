@@ -1,16 +1,27 @@
+"use client";
+
 import AppLayout from "@/components/app-layout";
 import { callHistory, Call } from "@/lib/data";
 import { notFound } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, ShieldCheck, AlertTriangle, BadgeCheck, Bot, User, Wallet, Landmark, Link2 } from "lucide-react";
+import { Download, Share2, ShieldCheck, AlertTriangle, BadgeCheck, Bot, User, Wallet, Landmark, Link2, Play, Pause, Music } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import React, { useState, useRef } from "react";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ReportPage() {
   const call: Call | undefined = callHistory.find(c => c.id === '1');
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const { toast } = useToast();
 
   if (!call) {
     notFound();
@@ -29,6 +40,64 @@ export default function ReportPage() {
     }
   };
 
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(() => {
+          toast({
+            variant: "destructive",
+            title: "Audio Error",
+            description: "Could not play the audio file.",
+          });
+        });
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+      setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    if (isNaN(time) || time === 0) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: 'AI Guardian: Scam Call Evidence',
+      text: `Evidence from a scam call with ${call.caller}. Listen to the recording.`,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link Copied",
+        description: "Report link copied to clipboard.",
+      });
+    }
+  };
+
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
@@ -38,8 +107,8 @@ export default function ReportPage() {
             <p className="text-muted-foreground">Call from: {call.caller}</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="icon"><Share2 className="h-4 w-4" /></Button>
-            <Button><Download className="h-4 w-4 mr-2" /> Download</Button>
+            <Button variant="outline" size="icon" onClick={handleShare}><Share2 className="h-4 w-4" /></Button>
+            <Button><Download className="h-4 w-4 mr-2" /> Download Report</Button>
           </div>
         </header>
         
@@ -67,6 +136,38 @@ export default function ReportPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {call.audioUrl && (
+              <Card>
+                <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+                  <Music className="w-5 h-5 text-primary"/>
+                  <CardTitle className="text-xl">Call Recording</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                    <div className="flex items-center gap-3">
+                      <Button size="icon" variant="outline" onClick={togglePlay}>
+                        {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                      </Button>
+                      <div className="flex-1 space-y-1">
+                        <Progress value={progress} className="h-2" />
+                         <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>{formatTime(currentTime)}</span>
+                            <span>{formatTime(duration)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <audio
+                      ref={audioRef}
+                      src={call.audioUrl}
+                      onTimeUpdate={handleTimeUpdate}
+                      onLoadedMetadata={handleLoadedMetadata}
+                      onEnded={() => setIsPlaying(false)}
+                      preload="metadata"
+                      className="hidden"
+                    />
+                </CardContent>
+              </Card>
+            )}
 
             {call.scamData && (
               <Card className="border-destructive/50">
