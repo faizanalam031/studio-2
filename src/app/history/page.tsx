@@ -1,13 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import { BadgeCheck, Phone, AlertTriangle, ShieldCheck } from "lucide-react";
 import AppLayout from "@/components/app-layout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { callHistory } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
 
 export default function HistoryPage() {
+  const [timestamps, setTimestamps] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const newTimestamps: { [key: string]: string } = {};
+    callHistory.forEach(call => {
+      newTimestamps[call.id] = new Date(call.timestamp).toLocaleString();
+    });
+    setTimestamps(newTimestamps);
+  }, []);
 
   const getIconForType = (type: string) => {
     switch (type) {
@@ -32,29 +44,41 @@ export default function HistoryPage() {
         <ScrollArea className="flex-1 px-4 md:px-6">
           <Card className="rounded-2xl">
             <CardContent className="p-0">
-              <div className="space-y-2">
-                {callHistory.map((call, index) => (
-                  <div key={call.id}>
-                    <Link href={`/report/${call.id}`} className="block rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center gap-4 p-3">
-                        <div className="flex-shrink-0 p-2 bg-muted/50 rounded-lg">
-                          {getIconForType(call.type)}
-                        </div>
-                        <div className="flex-grow">
-                          <p className="font-medium">{call.caller}</p>
-                          <p className="text-sm text-muted-foreground">{new Date(call.timestamp).toLocaleString()}</p>
-                        </div>
-                        <div className="text-right">
-                          <Badge variant={call.type === 'Scam' ? 'destructive' : call.type === 'AI-Handled' ? 'default' : 'secondary'} className={call.type === 'AI-Handled' ? 'bg-accent text-accent-foreground' : ''}>
-                            {call.type}
-                          </Badge>
-                          <p className="text-xs text-muted-foreground mt-1">{call.duration}</p>
-                        </div>
+              <div>
+                {callHistory.map((call, index) => {
+                  const isClickable = call.type === 'AI-Handled' || call.type === 'Scam';
+                  const content = (
+                    <div className="flex items-center gap-4 p-3">
+                      <div className="flex-shrink-0 p-2 bg-muted/50 rounded-lg">
+                        {getIconForType(call.type)}
                       </div>
-                    </Link>
-                    {index < callHistory.length - 1 && <Separator />}
-                  </div>
-                ))}
+                      <div className="flex-grow">
+                        <p className="font-medium">{call.caller}</p>
+                        <p className="text-sm text-muted-foreground">{timestamps[call.id] || ''}</p>
+                      </div>
+                      <div className="text-right">
+                        <Badge variant={call.type === 'Scam' ? 'destructive' : call.type === 'AI-Handled' ? 'default' : 'secondary'} className={call.type === 'AI-Handled' ? 'bg-accent text-accent-foreground' : ''}>
+                          {call.type}
+                        </Badge>
+                        <p className="text-xs text-muted-foreground mt-1">{call.duration}</p>
+                      </div>
+                    </div>
+                  );
+                  return (
+                    <div key={call.id}>
+                      {isClickable ? (
+                        <Link href={`/report/1?id=${call.id}`} className="block rounded-lg hover:bg-muted/50 transition-colors">
+                          {content}
+                        </Link>
+                      ) : (
+                        <div className="block rounded-lg">
+                          {content}
+                        </div>
+                      )}
+                      {index < callHistory.length - 1 && <Separator />}
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

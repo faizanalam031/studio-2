@@ -71,7 +71,7 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {recentActivity.map((call) => (
               <Card key={call.id}>
-                <Link href={call.id === '3' ? '/history' : `/report/${call.id}`} className="block">
+                <Link href={call.id === '3' ? '/history' : `/report/1?id=${call.id}`} className="block">
                   <div className="flex items-center p-3">
                     <div className="flex-shrink-0 p-3 bg-muted rounded-full mr-4">
                         {call.icon}

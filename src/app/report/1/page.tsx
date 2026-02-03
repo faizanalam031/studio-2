@@ -2,7 +2,7 @@
 
 import AppLayout from "@/components/app-layout";
 import { callHistory, Call } from "@/lib/data";
-import { notFound } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,7 +15,9 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ReportPage() {
-  const call: Call | undefined = callHistory.find(c => c.id === '1');
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id') || '1';
+  const call: Call | undefined = callHistory.find(c => c.id === id);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
