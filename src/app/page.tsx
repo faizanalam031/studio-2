@@ -31,7 +31,7 @@ export default function OnboardingPage() {
           <Card className="animate-in fade-in-0 zoom-in-95 duration-500">
             <CardHeader className="items-center text-center">
               <AiGuardianLogo className="mb-4" />
-              <CardTitle className="font-headline text-3xl">Welcome to AI Guardian</CardTitle>
+               <CardTitle className="font-headline text-3xl">Welcome to Suraksha Saathi</CardTitle>
               <CardDescription className="text-base">Your personal shield against scam calls.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-6 text-center">

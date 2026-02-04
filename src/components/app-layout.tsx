@@ -10,7 +10,7 @@ import {
   Bell,
   BrainCircuit,
   LineChart,
-  Users,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AiGuardianLogo from "./ai-guardian-logo";
@@ -32,7 +32,7 @@ const navItems = [
   { href: "/history", icon: History, label: "Encounters" },
   { href: "/memory", icon: BrainCircuit, label: "Intelligence" },
   { href: "/trends", icon: LineChart, label: "Trends" },
-  { href: "/family", icon: Users, label: "Family Shield" },
+  { href: "/help", icon: HelpCircle, label: "Help", highlight: true },
   { href: "/settings", icon: Settings, label: "Controls" },
 ];
 
@@ -112,7 +112,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-foreground/70 transition-colors hover:bg-muted hover:text-foreground",
-                    isActive && "bg-muted font-semibold text-foreground"
+                    isActive && "bg-muted font-semibold text-foreground",
+                    item.highlight && !isActive && "text-primary hover:bg-primary/10 hover:text-primary font-medium"
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -171,7 +172,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 pt-1 text-xs text-foreground/60 transition-colors",
-                  isActive && "text-primary"
+                  isActive && "text-primary",
+                  item.highlight && !isActive && "text-orange-500 hover:text-orange-600"
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -182,19 +184,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
-          <Link
-            href="/settings"
-            className={cn(
-                "flex flex-col items-center justify-center gap-1 pt-1 text-xs text-foreground/60 transition-colors",
-                pathname.startsWith("/settings") && "text-primary"
-            )}
-          >
-            <Settings className="h-5 w-5" />
-            <span className="font-medium">Controls</span>
-            {pathname.startsWith("/settings") && (
-                <span className="mt-0.5 block h-1 w-1 rounded-full bg-primary"></span>
-            )}
-          </Link>
         </div>
       </nav>
     </div>

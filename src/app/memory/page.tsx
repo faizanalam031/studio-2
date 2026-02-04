@@ -50,7 +50,7 @@ export default function MemoryPage() {
             <BrainCircuit className="w-8 h-8 text-primary" />
           </div>
           <h1 className="font-headline text-2xl md:text-3xl font-bold">AI Intelligence</h1>
-          <p className="text-muted-foreground">Guardian is learning from every attack.</p>
+          <p className="text-muted-foreground">Suraksha Saathi is learning from every attack.</p>
         </header>
 
         <div className="flex-1 p-4 md:p-6 space-y-8 overflow-y-auto">

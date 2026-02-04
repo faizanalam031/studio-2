@@ -10,7 +10,7 @@ export default function AiGuardianLogo({ className }: AiGuardianLogoProps) {
     <div className={cn("flex items-center gap-2 text-primary", className)}>
       <Shield className="h-6 w-6" />
       <span className="font-headline text-xl font-bold tracking-tight">
-        Guardian
+        Suraksha Saathi
       </span>
     </div>
   );

@@ -51,7 +51,7 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="p-4 md:p-6 space-y-6">
         <div className="text-center space-y-2 pt-4">
-          <h1 className="text-2xl font-bold font-headline">Guardian Hub</h1>
+          <h1 className="text-2xl font-bold font-headline">Suraksha Saathi</h1>
           <p className="text-muted-foreground">
             Your personal shield against scams.
           </p>
@@ -71,7 +71,7 @@ export default function DashboardPage() {
         <div className="text-center">
           <Button size="lg" className="w-full max-w-sm mx-auto h-16 text-lg font-bold bg-green-600 hover:bg-green-700 text-white shadow-lg animate-pulse">
             <ShieldCheck className="h-6 w-6 mr-2" />
-            AI is Watching Calls
+            Suraksha Saathi is Watching Calls
           </Button>
           <p className="text-muted-foreground text-sm mt-2">You stay silent. AI handles potential threats.</p>
         </div>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                   <div className="p-3">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 p-3 bg-muted rounded-full mr-4">
-                          {call.type === 'AI-Handled' || call.type === 'Scam' ? <Shield className="h-5 w-5 text-destructive"/> : <ShieldCheck className="h-5 w-5 text-primary"/>}
+                          {call.type === 'AI-Handled' ? <Shield className="h-5 w-5 text-destructive"/> : <ShieldCheck className="h-5 w-5 text-primary"/>}
                       </div>
                       <div className="flex-grow">
                         <p className="font-medium">{call.caller}</p>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
                         </p>
                       </div>
                       <Badge 
-                        variant={call.type === 'AI-Handled' || call.type === 'Scam' ? 'destructive' : 'secondary'} 
+                        variant={call.type === 'AI-Handled' ? 'destructive' : 'secondary'} 
                       >
                         {call.type}
                       </Badge>

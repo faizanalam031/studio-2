@@ -20,7 +20,7 @@ export default function LiveProtectionStatus() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </span>
-                <span className="text-sm font-medium text-muted-foreground hidden sm:inline">Guardian Active</span>
+                <span className="text-sm font-medium text-muted-foreground hidden sm:inline">Suraksha Saathi Active</span>
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-64">
@@ -31,7 +31,7 @@ export default function LiveProtectionStatus() {
                     <span className="relative flex h-2 w-2">
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                     </span>
-                    <span>Guardian Active</span>
+                    <span>Suraksha Saathi Active</span>
                 </div>
             </DropdownMenuItem>
              <DropdownMenuItem>

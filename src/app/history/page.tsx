@@ -46,7 +46,7 @@ export default function HistoryPage() {
             <CardContent className="p-0">
               <div>
                 {callHistory.map((call, index) => {
-                  const isClickable = call.type === 'AI-Handled' || call.type === 'Scam';
+                  const isClickable = call.type === 'AI-Handled';
                   const content = (
                     <div className="flex items-center gap-4 p-3">
                       <div className="flex-shrink-0 p-2 bg-muted/50 rounded-lg">
@@ -57,7 +57,7 @@ export default function HistoryPage() {
                         <p className="text-sm text-muted-foreground">{timestamps[call.id] || ''}</p>
                       </div>
                       <div className="text-right">
-                        <Badge variant={call.type === 'Scam' ? 'destructive' : call.type === 'AI-Handled' ? 'default' : 'secondary'} className={call.type === 'AI-Handled' ? 'bg-accent text-accent-foreground' : ''}>
+                        <Badge variant={call.type === 'AI-Handled' ? 'default' : 'secondary'} className={call.type === 'AI-Handled' ? 'bg-accent text-accent-foreground' : ''}>
                           {call.type}
                         </Badge>
                         <p className="text-xs text-muted-foreground mt-1">{call.duration}</p>

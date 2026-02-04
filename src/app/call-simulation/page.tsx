@@ -158,7 +158,7 @@ export default function CallSimulationPage() {
         <SheetContent side="bottom" className="rounded-t-3xl">
           <SheetHeader>
             <SheetTitle className="font-headline">Live Intelligence</SheetTitle>
-            <SheetDescription>Real-time entities detected by AI Guardian.</SheetDescription>
+            <SheetDescription>Real-time entities detected by Suraksha Saathi.</SheetDescription>
           </SheetHeader>
           <div className="py-4 space-y-4">
             <div>
@@ -207,7 +207,7 @@ export default function CallSimulationPage() {
             <ShieldCheck className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
           <CardTitle className="font-headline text-2xl">This was a scam. You're safe.</CardTitle>
-          <CardDescription>AI Guardian handled the call and collected evidence.</CardDescription>
+          <CardDescription>Suraksha Saathi handled the call and collected evidence.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-left">

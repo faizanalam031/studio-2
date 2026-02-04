@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User, Shield, Moon, Sun, Users, FileText } from "lucide-react";
+import { User, Shield, Moon, Sun, FileText, Key, Check, AlertCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -20,16 +20,18 @@ export default function SettingsPage() {
   const userAvatar = PlaceHolderImages.find(p => p.id === 'user-profile-avatar');
   const [personality, setPersonality] = useState<Personality>('polite');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [apiKeySaved, setApiKeySaved] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      document.documentElement.classList.add("dark");
-      setIsDarkMode(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setIsDarkMode(false);
+    setIsDarkMode(savedTheme === "dark");
+    
+    // Load saved API key from localStorage
+    const savedApiKey = localStorage.getItem("openai_api_key");
+    if (savedApiKey) {
+      setApiKey(savedApiKey);
     }
   }, []);
 
@@ -44,12 +46,25 @@ export default function SettingsPage() {
     }
   };
 
+  const handleSaveApiKey = () => {
+    if (apiKey.trim()) {
+      localStorage.setItem("openai_api_key", apiKey);
+      setApiKeySaved(true);
+      setTimeout(() => setApiKeySaved(false), 3000);
+    }
+  };
+
+  const handleClearApiKey = () => {
+    localStorage.removeItem("openai_api_key");
+    setApiKey("");
+  };
+
   return (
     <AppLayout>
       <div className="flex flex-col h-full">
         <header className="p-4 md:p-6">
-          <h1 className="font-headline text-2xl md:text-3xl font-bold">Guardian Controls</h1>
-          <p className="text-muted-foreground">Fine-tune how your AI Guardian protects you.</p>
+          <h1 className="font-headline text-2xl md:text-3xl font-bold">Suraksha Saathi Controls</h1>
+          <p className="text-muted-foreground">Fine-tune how Suraksha Saathi protects you.</p>
         </header>
 
         <div className="flex-1 p-4 md:p-6 space-y-8 overflow-y-auto">
@@ -93,27 +108,6 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-           {/* FAMILY SHIELD CARD */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Users className="text-primary"/> Family Shield</CardTitle>
-              <CardDescription>Protect your loved ones by adding their numbers. The AI will auto-answer for them, and you'll get notified of any scam attempts.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-               <div className="space-y-2">
-                <Label htmlFor="family-phone">Add Family Member's Number</Label>
-                <div className="flex gap-2">
-                    <Input id="family-phone" placeholder="+91 00000 00000" />
-                    <Button>Add</Button>
-                </div>
-              </div>
-              <Button variant="secondary" className="w-full" asChild>
-                <Link href="/family">Manage Family Shield</Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-
           {/* BEHAVIOR SECTION */}
           <Card>
             <CardHeader>
@@ -147,7 +141,7 @@ export default function SettingsPage() {
           {/* PERSONALITY SECTION */}
           <Card>
             <CardHeader>
-                <CardTitle>Guardian Personality</CardTitle>
+                <CardTitle>Suraksha Saathi Personality</CardTitle>
                 <CardDescription>Choose how the AI behaves when it engages with scammers.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -182,6 +176,95 @@ export default function SettingsPage() {
                 </div>
                 <Switch id="dark-mode" checked={isDarkMode} onCheckedChange={toggleTheme} />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* API KEY SETTINGS CARD */}
+          <Card className="border-blue-200 dark:border-blue-900">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Key className="h-5 w-5" />
+                OpenAI API Key Setup
+              </CardTitle>
+              <CardDescription>
+                Configure your OpenAI API key to enable the AI Crime Assistant
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-lg p-4">
+                <div className="flex gap-2">
+                  <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-800 dark:text-blue-300">
+                    <p className="font-semibold mb-1">Get your API key from OpenAI</p>
+                    <ol className="list-decimal list-inside space-y-1 text-xs">
+                      <li>Go to <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-blue-900 dark:hover:text-blue-200">OpenAI API Keys page</a></li>
+                      <li>Create a new API key (if you don't have one)</li>
+                      <li>Copy the key and paste it below</li>
+                      <li>Click "Save API Key" to enable AI features</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="api-key" className="text-base font-medium">OpenAI API Key</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="api-key"
+                    type={showApiKey ? "text" : "password"}
+                    placeholder="sk-proj-..."
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowApiKey(!showApiKey)}
+                  >
+                    {showApiKey ? "Hide" : "Show"}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Your API key is stored locally in your browser. Never share your API key with anyone.
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleSaveApiKey}
+                  className={cn(
+                    "flex-1 transition-all",
+                    apiKeySaved && "bg-green-600 hover:bg-green-600"
+                  )}
+                >
+                  {apiKeySaved ? (
+                    <>
+                      <Check className="h-4 w-4 mr-2" />
+                      Saved Successfully
+                    </>
+                  ) : (
+                    "Save API Key"
+                  )}
+                </Button>
+                {apiKey && (
+                  <Button
+                    variant="outline"
+                    onClick={handleClearApiKey}
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+
+              {apiKey && (
+                <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900 rounded-lg p-3">
+                  <p className="text-sm text-green-800 dark:text-green-300 flex items-center gap-2">
+                    <Check className="h-4 w-4" />
+                    API Key configured. AI features are now active.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 

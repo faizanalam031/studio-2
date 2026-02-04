@@ -99,7 +99,7 @@ export default function ReportPage() {
 
   const handleShare = async () => {
     const shareData = {
-      title: 'AI Guardian: Scam Call Evidence',
+      title: 'Suraksha Saathi: Scam Call Evidence',
       text: `Evidence from a scam call with ${call.caller}. Listen to the recording.`,
       url: window.location.href,
     };

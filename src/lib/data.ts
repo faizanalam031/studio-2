@@ -1,7 +1,7 @@
 export type Call = {
   id: string;
   caller: string;
-  type: 'Scam' | 'Safe' | 'AI-Handled';
+  type: 'Safe' | 'AI-Handled';
   timestamp: string;
   duration?: string;
   transcript?: { speaker: 'AI' | 'Scammer' | 'User'; text: string }[];
@@ -46,7 +46,7 @@ export const callHistory: Call[] = [
   {
     id: '2',
     caller: 'Unknown',
-    type: 'Scam',
+    type: 'AI-Handled',
     timestamp: '2024-07-29T09:15:00Z',
     duration: '0m 12s',
     explanation: 'The number is not in contacts and matched a known spam prefix.',
