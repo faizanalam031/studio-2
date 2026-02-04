@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, ShieldCheck, AlertTriangle, BadgeCheck, Bot, User, Wallet, Landmark, Link2, Play, Pause, Music } from "lucide-react";
+import { Download, Share2, ShieldCheck, AlertTriangle, BadgeCheck, Bot, User, Wallet, Landmark, Link2, Play, Pause, Music, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import React, { useState, useRef, useEffect } from "react";
@@ -30,7 +30,18 @@ export default function ReportPage() {
     if (call) {
       setFormattedTimestamp(new Date(call.timestamp).toLocaleString());
     }
-  }, [call]);
+  }, [call, id]);
+
+  useEffect(() => {
+    // Reset audio state when call changes
+    setIsPlaying(false);
+    setProgress(0);
+    setCurrentTime(0);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [id]);
 
   if (!call) {
     notFound();
@@ -157,7 +168,13 @@ export default function ReportPage() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="icon" onClick={handleShare}><Share2 className="h-4 w-4" /></Button>
-            <Button><Download className="h-4 w-4 mr-2" /> Download Report</Button>
+            <Button>
+                <Download className="h-4 w-4 mr-2" />
+                <div className="flex flex-col items-start leading-none">
+                    <span>Download</span>
+                    <Badge variant="secondary" className="h-auto p-0 px-1 -mb-1 -mr-4 text-[10px] bg-green-200 text-green-900">Govt-Ready</Badge>
+                </div>
+            </Button>
           </div>
         </header>
         
@@ -184,6 +201,19 @@ export default function ReportPage() {
                   <p className="font-semibold">{call.duration}</p>
                 </div>
               </CardContent>
+            </Card>
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle>Evidence Vault</CardTitle>
+                    <CardDescription>All captured evidence for reporting to authorities.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button variant="outline" className="w-full">
+                        <FileText className="mr-2 h-4 w-4"/>
+                        Download Govt-Ready PDF Report
+                    </Button>
+                </CardContent>
             </Card>
 
             {call.audioUrl && (

@@ -9,11 +9,12 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User, Shield, Moon, Sun } from "lucide-react";
+import { User, Shield, Moon, Sun, Users, FileText } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-type Personality = "polite" | "confused" | "assertive";
+type Personality = "polite" | "confused" | "assertive" | "silent";
 
 export default function SettingsPage() {
   const userAvatar = PlaceHolderImages.find(p => p.id === 'user-profile-avatar');
@@ -56,7 +57,6 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>User Profile</CardTitle>
-              <CardDescription>Manage your personal information.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
@@ -93,79 +93,107 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* APPEARANCE SECTION */}
-          <div>
-            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Appearance</h2>
-            <Card>
-              <CardContent className="p-0">
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-2">
-                      {isDarkMode ? <Moon className="h-5 w-5 text-muted-foreground" /> : <Sun className="h-5 w-5 text-muted-foreground" />}
-                      <Label htmlFor="dark-mode" className="text-base font-medium">Dark Mode</Label>
-                  </div>
-                  <Switch id="dark-mode" checked={isDarkMode} onCheckedChange={toggleTheme} />
+           {/* FAMILY SHIELD CARD */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Users className="text-primary"/> Family Shield</CardTitle>
+              <CardDescription>Protect your loved ones by adding their numbers. The AI will auto-answer for them, and you'll get notified of any scam attempts.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+               <div className="space-y-2">
+                <Label htmlFor="family-phone">Add Family Member's Number</Label>
+                <div className="flex gap-2">
+                    <Input id="family-phone" placeholder="+91 00000 00000" />
+                    <Button>Add</Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+              <Button variant="secondary" className="w-full" asChild>
+                <Link href="/family">Manage Family Shield</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
 
           {/* BEHAVIOR SECTION */}
-          <div>
-            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Behavior</h2>
-            <Card>
-              <CardContent className="divide-y divide-border p-0">
-                <div className="flex items-center justify-between p-4">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="auto-answer" className="text-base font-medium">Auto AI Answer</Label>
-                    <p className="text-sm text-muted-foreground">Let AI answer confirmed scam calls automatically.</p>
-                  </div>
-                  <Switch id="auto-answer" defaultChecked={true} />
+          <Card>
+            <CardHeader>
+              <CardTitle>Behavior</CardTitle>
+            </CardHeader>
+            <CardContent className="divide-y divide-border p-0">
+              <div className="flex items-center justify-between p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="auto-answer" className="text-base font-medium">Auto AI Answer</Label>
+                  <p className="text-sm text-muted-foreground">Let AI answer confirmed scam calls automatically.</p>
                 </div>
-                <div className="flex items-center justify-between p-4">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="silent-monitoring" className="text-base font-medium">Silent Monitoring</Label>
-                    <p className="text-sm text-muted-foreground">Listen to AI takeover without interrupting.</p>
-                  </div>
-                  <Switch id="silent-monitoring" defaultChecked={true} />
+                <Switch id="auto-answer" defaultChecked={true} />
+              </div>
+              <div className="flex items-center justify-between p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="silent-monitoring" className="text-base font-medium">Silent Monitoring</Label>
+                  <p className="text-sm text-muted-foreground">Listen to AI takeover without interrupting.</p>
                 </div>
-                <div className="flex items-center justify-between p-4">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="gov-reporting" className="text-base font-medium">Government Reporting</Label>
-                    <p className="text-sm text-muted-foreground">Automatically share scam data with Cybercrime portal.</p>
-                  </div>
-                  <Switch id="gov-reporting" />
+                <Switch id="silent-monitoring" defaultChecked={true} />
+              </div>
+              <div className="flex items-center justify-between p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="gov-reporting" className="text-base font-medium">Government Reporting</Label>
+                  <p className="text-sm text-muted-foreground">Automatically share scam data with Cybercrime portal.</p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+                <Switch id="gov-reporting" />
+              </div>
+            </CardContent>
+          </Card>
 
           {/* PERSONALITY SECTION */}
-          <div>
-            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Personality</h2>
-            <div className="bg-muted p-1 rounded-full flex items-center">
-              {(['polite', 'confused', 'assertive'] as Personality[]).map((p) => (
-                <Button
-                  key={p}
-                  onClick={() => setPersonality(p)}
-                  variant={personality === p ? 'default' : 'ghost'}
-                  className={cn(
-                    "w-full rounded-full transition-colors capitalize",
-                    personality === p ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
-                  )}
-                >
-                  {p}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <Card>
+            <CardHeader>
+                <CardTitle>Guardian Personality</CardTitle>
+                <CardDescription>Choose how the AI behaves when it engages with scammers.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="bg-muted p-1 rounded-full grid grid-cols-2 gap-1">
+                {(['polite', 'confused', 'assertive', 'silent'] as Personality[]).map((p) => (
+                    <Button
+                    key={p}
+                    onClick={() => setPersonality(p)}
+                    variant={personality === p ? 'default' : 'ghost'}
+                    className={cn(
+                        "w-full rounded-full transition-colors capitalize",
+                        personality === p ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
+                    )}
+                    >
+                    {p === 'confused' ? 'Confused Senior' : p === 'silent' ? 'Silent Listener' : p}
+                    </Button>
+                ))}
+                </div>
+            </CardContent>
+          </Card>
           
+          {/* APPEARANCE SECTION */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Appearance</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="flex items-center justify-between p-4">
+                <div className="flex items-center gap-2">
+                    {isDarkMode ? <Moon className="h-5 w-5 text-muted-foreground" /> : <Sun className="h-5 w-5 text-muted-foreground" />}
+                    <Label htmlFor="dark-mode" className="text-base font-medium">Dark Mode</Label>
+                </div>
+                <Switch id="dark-mode" checked={isDarkMode} onCheckedChange={toggleTheme} />
+              </div>
+            </CardContent>
+          </Card>
+
           {/* STRICT PROTECTION CARD */}
           <Card className="bg-primary/10 border-primary/20">
-            <CardContent className="p-4 flex items-start gap-4">
-              <Shield className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+            <CardHeader>
+                <CardTitle className="text-primary flex items-center gap-2"><Shield /> Strict Protection</CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-start gap-4">
               <div>
-                <h3 className="font-semibold text-primary">Strict Protection</h3>
-                <p className="text-sm text-primary/80">In this mode, any caller not in your contacts will be screened by the AI first.</p>
+                <p className="text-sm text-primary/80 mb-4">In this mode, any caller not in your contacts will be screened by the AI first.</p>
+                <Button variant="secondary" size="sm">Enable Strict Mode</Button>
               </div>
             </CardContent>
           </Card>

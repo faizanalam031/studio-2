@@ -1,7 +1,9 @@
 import AppLayout from "@/components/app-layout";
-import { BrainCircuit, ShieldCheck } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BrainCircuit, ShieldCheck, FlaskConical } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const intelligenceMaturity = [
   {
@@ -47,7 +49,7 @@ export default function MemoryPage() {
           <div className="inline-block p-3 bg-primary/10 rounded-full mb-3">
             <BrainCircuit className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="font-headline text-2xl md:text-3xl font-bold">AI Growth</h1>
+          <h1 className="font-headline text-2xl md:text-3xl font-bold">AI Intelligence</h1>
           <p className="text-muted-foreground">Guardian is learning from every attack.</p>
         </header>
 
@@ -73,12 +75,13 @@ export default function MemoryPage() {
             </CardContent>
           </Card>
 
-          <div>
-            <h2 className="text-xl font-semibold font-headline mb-4">Learned Patterns</h2>
-            <div className="space-y-4">
+          <Card>
+            <CardHeader>
+                <CardTitle>Learned Patterns</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               {learnedPatterns.map((pattern, index) => (
-                <Card key={index}>
-                  <CardContent className="flex items-start gap-4 p-5">
+                <div key={index} className="flex items-start gap-4">
                     <div className="flex-shrink-0 w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
                       <span className="text-xl font-bold text-muted-foreground">{pattern.count}</span>
                     </div>
@@ -86,12 +89,22 @@ export default function MemoryPage() {
                       <h3 className="font-semibold">{pattern.title}</h3>
                       <p className="text-sm text-muted-foreground">{pattern.description}</p>
                     </div>
-                  </CardContent>
-                </Card>
+                </div>
               ))}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
           
+           <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><FlaskConical className="text-primary"/> Scam Simulation Mode</CardTitle>
+              <CardDescription>Experience fake scam calls to learn patterns safely. The AI will explain its actions afterward.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/simulation">
+                    <Button className="w-full">Start Simulation</Button>
+                </Link>
+            </CardContent>
+           </Card>
         </div>
       </div>
     </AppLayout>

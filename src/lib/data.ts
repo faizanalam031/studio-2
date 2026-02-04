@@ -12,6 +12,10 @@ export type Call = {
     riskFactors: string[];
   };
   audioUrl?: string;
+  explanation?: string;
+  confidence?: number;
+  timeSaved?: string;
+  patternsLearned?: number;
 };
 
 export const callHistory: Call[] = [
@@ -35,7 +39,9 @@ export const callHistory: Call[] = [
         bankAccounts: [],
         suspiciousLinks: [],
         riskFactors: ['Urgency Tactic', 'Request for Advance Fee', 'Unsolicited Prize']
-    }
+    },
+    explanation: 'Detected urgency language and a request for an advance fee, which are common scam tactics.',
+    confidence: 95,
   },
   {
     id: '2',
@@ -43,6 +49,8 @@ export const callHistory: Call[] = [
     type: 'Scam',
     timestamp: '2024-07-29T09:15:00Z',
     duration: '0m 12s',
+    explanation: 'The number is not in contacts and matched a known spam prefix.',
+    confidence: 80,
   },
   {
     id: '3',
@@ -50,6 +58,7 @@ export const callHistory: Call[] = [
     type: 'Safe',
     timestamp: '2024-07-28T20:05:00Z',
     duration: '5m 32s',
+    confidence: 10,
   },
     {
     id: '4',
@@ -57,6 +66,8 @@ export const callHistory: Call[] = [
     type: 'AI-Handled',
     timestamp: '2024-07-28T15:00:00Z',
     duration: '3m 10s',
+    explanation: 'Voice pattern matched a previously identified scammer.',
+    confidence: 98,
   },
   {
     id: '5',
@@ -64,5 +75,6 @@ export const callHistory: Call[] = [
     type: 'Safe',
     timestamp: '2024-07-28T11:45:00Z',
     duration: '1m 15s',
+    confidence: 5,
   },
 ];

@@ -38,7 +38,7 @@ export default function HistoryPage() {
     <AppLayout>
       <div className="flex flex-col h-full">
         <header className="p-4 md:p-6">
-          <h1 className="font-headline text-2xl md:text-3xl font-bold">Call & Scam Log</h1>
+          <h1 className="font-headline text-2xl md:text-3xl font-bold">Call & Scam Encounters</h1>
           <p className="text-muted-foreground">A complete record of all analyzed calls.</p>
         </header>
         <ScrollArea className="flex-1 px-4 md:px-6">

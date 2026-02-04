@@ -9,6 +9,8 @@ import {
   User,
   Bell,
   BrainCircuit,
+  LineChart,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AiGuardianLogo from "./ai-guardian-logo";
@@ -23,12 +25,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
+import LiveProtectionStatus from "./live-protection-status";
 
 const navItems = [
   { href: "/dashboard", icon: Shield, label: "Hub" },
-  { href: "/history", icon: History, label: "History" },
-  { href: "/memory", icon: BrainCircuit, label: "Memory" },
-  { href: "/settings", icon: Settings, label: "Setup" },
+  { href: "/history", icon: History, label: "Encounters" },
+  { href: "/memory", icon: BrainCircuit, label: "Intelligence" },
+  { href: "/trends", icon: LineChart, label: "Trends" },
+  { href: "/family", icon: Users, label: "Family Shield" },
+  { href: "/settings", icon: Settings, label: "Controls" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -42,6 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm md:hidden">
         <AiGuardianLogo />
         <div className="flex items-center gap-2">
+          <LiveProtectionStatus />
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
             <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-destructive" />
@@ -77,19 +83,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <aside className="hidden md:block border-r p-4">
           <div className="flex items-center justify-between mb-8">
             <AiGuardianLogo />
-            <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-destructive" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>No new notifications</DropdownMenuItem>
-            </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-1">
+                <LiveProtectionStatus />
+                <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="relative">
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-destructive" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>No new notifications</DropdownMenuItem>
+                </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
           </div>
           <nav className="flex flex-col gap-2 sticky top-6">
             {navItems.map((item) => {
@@ -150,8 +159,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card md:hidden">
-        <div className="grid h-16 grid-cols-4">
-          {navItems.map((item) => {
+        <div className="grid h-16 grid-cols-5">
+          {navItems.slice(0, 4).map((item) => {
             const isActive =
               item.href === "/dashboard"
                 ? pathname === item.href
@@ -173,6 +182,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
+          <Link
+            href="/settings"
+            className={cn(
+                "flex flex-col items-center justify-center gap-1 pt-1 text-xs text-foreground/60 transition-colors",
+                pathname.startsWith("/settings") && "text-primary"
+            )}
+          >
+            <Settings className="h-5 w-5" />
+            <span className="font-medium">Controls</span>
+            {pathname.startsWith("/settings") && (
+                <span className="mt-0.5 block h-1 w-1 rounded-full bg-primary"></span>
+            )}
+          </Link>
         </div>
       </nav>
     </div>
