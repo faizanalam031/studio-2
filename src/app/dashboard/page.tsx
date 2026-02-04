@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   AlertCircle,
@@ -29,6 +30,15 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function DashboardPage() {
+  const [timestamps, setTimestamps] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const newTimestamps: { [key: string]: string } = {};
+    callHistory.slice(0, 3).forEach(call => {
+      newTimestamps[call.id] = new Date(call.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    });
+    setTimestamps(newTimestamps);
+  }, []);
 
   const getConfidenceColor = (confidence?: number) => {
     if (!confidence) return "bg-gray-300";
@@ -111,7 +121,7 @@ export default function DashboardPage() {
                       <div className="flex-grow">
                         <p className="font-medium">{call.caller}</p>
                         <p className="text-sm text-muted-foreground">
-                          {new Date(call.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          {timestamps[call.id] || ''}
                         </p>
                       </div>
                       <Badge 
